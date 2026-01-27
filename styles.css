@@ -1,0 +1,43 @@
+body {
+    background-color: aqua;
+}
+
+.navbar {
+    color: white;
+    background-color: rgb(88, 199, 250);
+}
+
+.kartu {
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    margin: 5px 500px 5px 500px;
+    text-align: center;
+}
+
+.data {
+    color: black;
+    margin: 5px 5px 5px 5px ;
+    padding: 5px 5px;
+}
+
+h6 {
+    font-size: 15px;
+    font-family: "Arial Black", Gadget, sans-serif;
+}
+
+.terakhir {
+    font-size: 10px;
+    color: red
+}
+
+h4 {
+    font-size: 30px;
+    font-family: "Brush Script MT", cursive;
+}
+
+p {
+    font-size: 15px;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+
