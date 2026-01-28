@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Still learning</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="#">Home</a>
+        <a href="#">News</a>
+        <a href="#">About</a>
+        <a href="#">My Project</a>
+      </div>
+      <button class="nav-right" onclick="openModal()">Contact Me</button>
+    </nav>
+
+    <main class="kerangka">
+      <section class="kartu">
+        <div class="keterangan">
+          <h1>Hi! Welcome to my website~</h1>
+          <p class="info1">
+            My name is Mhd Nur Ifaturachman. You can call me Iif. I'm 26 years
+            old. I come from Kerinci, Jambi. I'm 162 cm tall and weigh 43 kg.
+          </p>
+          <p class="info2">
+            I have several work experiences, such as working as a parcel courier
+            for JNT and Shopee, and running a barbershop.
+          </p>
+
+          <div style="font-size: 30px">
+            <a href="#">
+              <span style="color: blue">Download CV </span>
+              <i class="fa-solid fa-download"></i>
+            </a>
+            <p class="sosial">My Social Media</p>
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-facebook-f"></i>
+            <i class="fa-brands fa-twitter"></i>
+            <i class="fa-brands fa-whatsapp"></i>
+          </div>
+        </div>
+
+        <div class="content-right">
+          <div class="profile-card">
+            <img src="iif.jpg" alt="iif" />
+            <div class="profile-text">
+              <h3>Iif</h3>
+              <p>Fullstack Developer Batch 65</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="contactModal" class="modal">
+      <div class="modal-content">
+        <h2>GET IN TOUCH</h2>
+
+        <form>
+          <label>Name</label>
+          <input type="text" placeholder="Your name.." />
+
+          <label>Email</label>
+          <input type="email" placeholder="Your email.." />
+
+          <label>Phone Number</label>
+          <input type="text" placeholder="Your phone number.." />
+
+          <label>Subject</label>
+          <input type="text" placeholder="Your Subject.." />
+
+          <label>Your Message</label>
+          <textarea rows="5" placeholder="Ask me.."></textarea>
+
+          <button type="submit" class="btn-submit">submit</button>
+        </form>
+      </div>
+    </div>
+    <script>
+      const modal = document.getElementById("contactModal");
+
+      function openModal() {
+        modal.style.display = "flex";
+      }
+
+      function closeModal() {
+        modal.style.display = "none";
+      }
+
+      window.onclick = function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      };
+    </script>
+  </body>
+</html>
