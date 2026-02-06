@@ -36,9 +36,7 @@ filterTech.addEventListener("change", () => {
   const projects = getProjects();
 
   const filtered =
-    tech === "all"
-      ? projects
-      : projects.filter((p) => p.techs.includes(tech));
+    tech === "all" ? projects : projects.filter((p) => p.techs.includes(tech));
 
   renderProjects(filtered);
 });
@@ -91,7 +89,5 @@ function saveProjects(data) {
 }
 
 function getCheckedTech() {
-  return [...document.querySelectorAll(".tech:checked")].map(
-    (t) => t.value
-  );
+  return [...document.querySelectorAll(".tech:checked")].map((t) => t.value);
 }
