@@ -58,6 +58,29 @@
             rows="3"
           >{{project.description}}</textarea>
 
+          <label class="form-label mt-3">Technologies</label>
+          <div class="mb-3">
+        <input
+          type="checkbox"
+          name="technologies"
+          value="HTML"
+          {{#if (includes project.technologies "HTML")}}checked{{/if}}
+        > HTML
+
+        <input
+          type="checkbox"
+          name="technologies"
+          value="CSS"
+          {{#if (includes project.technologies "CSS")}}checked{{/if}}
+        > CSS
+
+        <input
+          type="checkbox"
+          name="technologies"
+          value="JavaScript"
+          {{#if (includes project.technologies "JavaScript")}}checked{{/if}}
+        > JavaScript
+
           <div class="text-end mt-4">
             <button type="submit" class="btn btn-dark">
               Update

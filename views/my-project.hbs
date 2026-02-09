@@ -46,10 +46,27 @@
 
           <label class="form-label mt-3">Technologies</label>
           <div class="mb-3">
-            <label><input type="checkbox" class="tech" /> Node JS</label><br />
-            <label><input type="checkbox" class="tech" /> React JS</label><br />
-            <label><input type="checkbox" class="tech" /> Next JS</label><br />
-            <label><input type="checkbox" class="tech" /> TypeScript</label>
+        <input
+          type="checkbox"
+          name="technologies"
+          value="HTML"
+          {{#if (includes project.technologies "HTML")}}checked{{/if}}
+        > HTML
+
+        <input
+          type="checkbox"
+          name="technologies"
+          value="CSS"
+          {{#if (includes project.technologies "CSS")}}checked{{/if}}
+        > CSS
+
+        <input
+          type="checkbox"
+          name="technologies"
+          value="JavaScript"
+          {{#if (includes project.technologies "JavaScript")}}checked{{/if}}
+        > JavaScript
+
           </div>
 
           <label class="form-label">Upload Image</label>

@@ -12,6 +12,7 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1",
-    "hbs": "^4.2.0"
+    "hbs": "^4.2.0",
+    "pg": "^8.18.0"
   }
 }
