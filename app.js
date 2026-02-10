@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path");
 const { Pool } = require("pg");
+const session = require("express-session");
+const bcrypt = require("bcrypt");
 
 const hbs = require("hbs");
 
@@ -17,6 +19,22 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  session({
+    secret: "personal-web-secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect("/");
+  }
+}
+
 const pool = new Pool({
   user: "postgres",
   password: "thakr4wqe",
@@ -29,18 +47,71 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/my-project", async (req, res) => {
-  const result = await pool.query("SELECT * FROM projects");
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const result = await pool.query(
+    "SELECT * FROM users WHERE email = $1",
+    [email]
+  );
+
+  if (result.rows.length === 0) {
+    return res.send("Email tidak ditemukan");
+  }
+
+  const user = result.rows[0];
+  const match = await bcrypt.compare(password, user.password);
+
+  if (!match) {
+    return res.send("Password salah");
+  }
+
+  req.session.user = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  };
+
+  res.redirect("/my-project");
+});
+
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
+app.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await pool.query(
+    "INSERT INTO users (name, email, password) VALUES ($1, $2, $3)",
+    [name, email, hashedPassword]
+  );
+
+  res.redirect("/");
+});
+
+app.get("/my-project", isAuthenticated, async (req, res) => {
+  const userId = req.session.user.id;
+
+  const result = await pool.query(
+    "SELECT * FROM projects WHERE user_id = $1",
+    [userId]
+  );
 
   const projects = result.rows.map((p) => ({
     id: p.id,
-    name: p.name,
+    name: p.title,
     startDate: p.start_date,
     endDate: p.end_date,
     description: p.description,
   }));
 
-  res.render("my-project", { projects });
+  res.render("my-project", {
+    projects,
+    user: req.session.user,
+  });
 });
 
 app.get("/my-project/:id", async (req, res) => {
@@ -65,19 +136,23 @@ app.get("/my-project/:id", async (req, res) => {
   });
 });
 
-app.post("/my-project", async (req, res) => {
-  let { projectName, startDate, endDate, description } = req.body;
-
-  startDate = startDate || null;
-  endDate = endDate || null;
+app.post("/my-project", isAuthenticated, async (req, res) => {
+  const { projectName, startDate, endDate, description } = req.body;
+  const userId = req.session.user.id;
 
   await pool.query(
-    `INSERT INTO projects (title, start_date, end_date, description)
-     VALUES ($1, $2, $3, $4)`,
-    [projectName, startDate, endDate, description]
+    `INSERT INTO projects (user_id, title, start_date, end_date, description)
+     VALUES ($1, $2, $3, $4, $5)`,
+    [userId, projectName, startDate || null, endDate || null, description]
   );
 
   res.redirect("/my-project");
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
 });
 
 app.get("/my-project/:id/edit", async (req, res) => {
