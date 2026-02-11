@@ -31,7 +31,9 @@
       <div class="container">
         <h2>ADD MY PROJECT</h2>
 
-        <form id="projectForm" action="/my-project" method="POST">
+        <form id="projectForm" action="/my-project" 
+              method="POST" 
+              enctype="multipart/form-data">
           <label class="form-label">Project Name</label>
           <input type="text" class="form-control" name="projectName" required />
 
@@ -75,7 +77,7 @@
           </div>
 
           <label class="form-label">Upload Image</label>
-          <input type="file" class="form-control mb-4" />
+          <input type="file" name="image" class="form-control mb-4" />
 
           <div class="text-end">
             <button type="submit" class="btn btn-dark px-4 rounded-pill">
@@ -94,6 +96,9 @@
           {{#each projects}}
             <div class="col-md-4">
               <div class="card p-3">
+                {{#if this.image}}
+                <img src="{{this.image}}" class="img-fluid mb-2" />
+                {{/if}}
                 <h5>{{this.name}}</h5>
                 <p>{{this.description}}</p>
                 <small>{{this.startDate}} - {{this.endDate}}</small>

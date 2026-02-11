@@ -21,11 +21,9 @@
       <div class="container">
         <h2>EDIT PROJECT</h2>
 
-        <form
-          action="/my-project/{{project.id}}/edit"
-          method="POST"
-          id="projectForm"
-        >
+  <form action="/my-project/{{project.id}}/edit" 
+        method="POST" 
+        enctype="multipart/form-data">
           <label class="form-label">Project Name</label>
           <input
             type="text"
@@ -81,6 +79,10 @@
           {{#if (includes project.technologies "JavaScript")}}checked{{/if}}
         > JavaScript
 
+        <div class="mb-3">
+          <label class="form-label">Upload Image</label>
+          <input type="file" name="image" class="form-control" />
+        </div>
           <div class="text-end mt-4">
             <button type="submit" class="btn btn-dark">
               Update

@@ -3,6 +3,8 @@ const path = require("path");
 const { Pool } = require("pg");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
+const fs = require("fs");
 
 const hbs = require("hbs");
 
@@ -11,6 +13,11 @@ hbs.registerHelper("includes", function (array, value) {
 });
 
 const app = express();
+const uploadPath = path.join(__dirname, "public/uploads");
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 const PORT = 3000;
 
 app.set("view engine", "hbs");
@@ -42,6 +49,17 @@ const pool = new Pool({
   database: "personal_web",
   port: 5432,
 });
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -100,13 +118,14 @@ app.get("/my-project", isAuthenticated, async (req, res) => {
     [userId]
   );
 
-  const projects = result.rows.map((p) => ({
-    id: p.id,
-    name: p.title,
-    startDate: p.start_date,
-    endDate: p.end_date,
-    description: p.description,
-  }));
+const projects = result.rows.map((p) => ({
+  id: p.id,
+  name: p.title,
+  startDate: p.start_date,
+  endDate: p.end_date,
+  description: p.description,
+  image: p.image,
+}));
 
   res.render("my-project", {
     projects,
@@ -136,14 +155,16 @@ app.get("/my-project/:id", async (req, res) => {
   });
 });
 
-app.post("/my-project", isAuthenticated, async (req, res) => {
+app.post("/my-project", isAuthenticated, upload.single("image"), async (req, res) => {
   const { projectName, startDate, endDate, description } = req.body;
   const userId = req.session.user.id;
 
+  const image = req.file ? "/uploads/" + req.file.filename : null;
+
   await pool.query(
-    `INSERT INTO projects (user_id, title, start_date, end_date, description)
-     VALUES ($1, $2, $3, $4, $5)`,
-    [userId, projectName, startDate || null, endDate || null, description]
+    `INSERT INTO projects (user_id, title, start_date, end_date, description, image)
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [userId, projectName, startDate || null, endDate || null, description, image]
   );
 
   res.redirect("/my-project");
@@ -177,27 +198,46 @@ app.get("/my-project/:id/edit", async (req, res) => {
   });
 });
 
-app.post("/my-project/:id/edit", async (req, res) => {
+app.post("/my-project/:id/edit", isAuthenticated, upload.single("image"), async (req, res) => {
   const { id } = req.params;
-  let { projectName, startDate, endDate, description } = req.body;
+  const { projectName, startDate, endDate, description } = req.body;
 
-  startDate = startDate || null;
-  endDate = endDate || null;
+  const existing = await pool.query(
+    "SELECT * FROM projects WHERE id = $1",
+    [id]
+  );
+
+  let image = existing.rows[0].image;
+
+  if (req.file) {
+    image = "/uploads/" + req.file.filename;
+  }
 
   await pool.query(
     `UPDATE projects
-     SET title=$1, start_date=$2, end_date=$3, description=$4
-     WHERE id=$5`,
-    [projectName, startDate, endDate, description, id]
+     SET title=$1, start_date=$2, end_date=$3, description=$4, image=$5
+     WHERE id=$6`,
+    [projectName, startDate || null, endDate || null, description, image, id]
   );
 
   res.redirect("/my-project");
 });
 
-app.post("/my-project/:id/delete", async (req, res) => {
+app.post("/my-project/:id/delete", isAuthenticated, async (req, res) => {
   const id = Number(req.params.id);
 
-  await pool.query("DELETE FROM projects WHERE id = $1", [id]);
+  const result = await pool.query("SELECT image FROM projects WHERE id=$1", [id]);
+
+  const imagePath = result.rows[0]?.image;
+
+  if (imagePath) {
+    const fullPath = path.join(__dirname, "public", imagePath);
+    if (fs.existsSync(fullPath)) {
+      fs.unlinkSync(fullPath);
+    }
+  }
+
+  await pool.query("DELETE FROM projects WHERE id=$1", [id]);
 
   res.redirect("/my-project");
 });
