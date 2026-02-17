@@ -2,9 +2,12 @@
   "name": "portofolio-web",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "keywords": [],
   "author": "",
@@ -13,7 +16,7 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.4",
-    "express": "^5.2.1",
+    "express": "^4.22.1",
     "express-handlebars": "^8.0.6",
     "express-session": "^1.19.0",
     "hbs": "^4.2.0",

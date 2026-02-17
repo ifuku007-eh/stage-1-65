@@ -9,15 +9,14 @@ const hbs = require("hbs"); // Handlebars template engine
 const multer = require("multer"); // Upload file
 
 const app = express();
-const PORT = 3000; // Port server
+const PORT = process.env.PORT || 3000; // Port server
 
 // ================= DATABASE CONNECTION =================
 const pool = new Pool({
-  user: "postgres",
-  password: "thakr4wqe",
-  host: "localhost",
-  port: 5432,
-  database: "portfolio_web",
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // ================= APP CONFIGURATION =================
