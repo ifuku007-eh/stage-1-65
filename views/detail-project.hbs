@@ -1,0 +1,64 @@
+{{!< dashboard}}
+
+<!-- ===== MAIN CONTAINER FULL WIDTH ===== -->
+<div class="container-fluid p-0"> <!-- Container utama tanpa padding -->
+
+  <!-- ===== FULL HEIGHT ROW ===== -->
+  <div class="row g-0 vh-100"> <!-- Row full height (100% viewport) -->
+
+    <!-- ===== LEFT COLUMN (DETAIL TEXT) ===== -->
+    <div class="col-md-6 d-flex align-items-center p-5"> <!-- Kolom kiri isi detail hero -->
+
+      <!-- Wrapper konten teks -->
+      <div>
+
+        <!-- Nama Hero -->
+        <h1 class="fw-bold mb-4">{{project.name}}</h1>
+
+        <!-- Badge Gender -->
+        <span class="badge bg-primary mb-3">
+          Gender: {{project.gender}}
+        </span>
+
+        <!-- ===== ROLE BADGES CONTAINER ===== -->
+        <div class="mb-4"> <!-- Container daftar role hero -->
+
+          {{#each project.roles}}
+            <span class="badge bg-success me-2">
+              {{this}}
+            </span>
+          {{/each}}
+
+        </div>
+
+        <!-- Deskripsi Hero -->
+        <p class="lead">
+          {{project.description}}
+        </p>
+
+        <!-- Tombol kembali ke dashboard -->
+        <a href="/dashboard" class="btn btn-outline-light mt-4">
+          ← Back to Dashboard
+        </a>
+
+      </div>
+      <!-- End Wrapper konten teks -->
+
+    </div>
+    <!-- End Left Column -->
+
+    <!-- ===== RIGHT COLUMN (IMAGE) ===== -->
+    <div class="col-md-6 p-0"> <!-- Kolom kanan untuk gambar hero -->
+
+      {{#if project.media}}
+        <img src="{{project.media}}" class="project-detail-img">
+      {{/if}}
+
+    </div>
+    <!-- End Right Column -->
+
+  </div>
+  <!-- End Row -->
+
+</div>
+<!-- End Main Container -->

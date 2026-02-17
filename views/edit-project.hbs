@@ -1,0 +1,123 @@
+{{!< dashboard}}
+
+<h2>Edit Project</h2>
+
+<form
+  action="/projects/{{project.id}}?_method=PUT"
+  method="POST"
+  enctype="multipart/form-data"
+>
+  <!-- Project Name -->
+  <input
+    class="form-control mb-3"
+    name="name"
+    value="{{project.name}}"
+    required
+  />
+
+  <!-- Description -->
+  <textarea class="form-control mb-3" name="description">
+{{project.description}}</textarea
+  >
+
+  <!-- Gender -->
+  <label class="fw-bold">Gender</label>
+  <div class="mb-3">
+    <div class="form-check">
+      {{#if (eq project.gender "Male")}}
+      <input
+        class="form-check-input"
+        type="radio"
+        name="gender"
+        value="Male"
+        checked
+      />
+      {{else}}
+      <input class="form-check-input" type="radio" name="gender" value="Male" />
+      {{/if}}
+      <label class="form-check-label">Male</label>
+    </div>
+
+    <div class="form-check">
+      {{#if (eq project.gender "Female")}}
+      <input
+        class="form-check-input"
+        type="radio"
+        name="gender"
+        value="Female"
+        checked
+      />
+      {{else}}
+      <input
+        class="form-check-input"
+        type="radio"
+        name="gender"
+        value="Female"
+      />
+      {{/if}}
+      <label class="form-check-label">Female</label>
+    </div>
+
+    <div class="form-check">
+      {{#if (eq project.gender "Undefined")}}
+      <input
+        class="form-check-input"
+        type="radio"
+        name="gender"
+        value="Undefined"
+        checked
+      />
+      {{else}}
+      <input
+        class="form-check-input"
+        type="radio"
+        name="gender"
+        value="Undefined"
+      />
+      {{/if}}
+      <label class="form-check-label">Undefined</label>
+    </div>
+  </div>
+
+  <!-- Hero Roles -->
+  <label class="fw-bold">Hero Role</label>
+  <div class="mb-3">
+    {{#each heroRoles}}
+    <div class="form-check">
+      {{#if (includes ../project.roles this)}}
+      <input
+        class="form-check-input"
+        type="checkbox"
+        name="roles"
+        value="{{this}}"
+        checked
+      />
+      {{else}}
+      <input
+        class="form-check-input"
+        type="checkbox"
+        name="roles"
+        value="{{this}}"
+      />
+      {{/if}}
+      <label class="form-check-label">{{this}}</label>
+    </div>
+    {{/each}}
+  </div>
+
+  <!-- Hidden Old Media -->
+  <input type="hidden" name="oldMedia" value="{{project.media}}" />
+
+  <!-- Hero Image -->
+  <label class="fw-bold">Hero Image</label>
+
+  {{#if project.media}}
+  <div class="mb-2">
+    <img src="{{project.media}}" width="150" />
+  </div>
+  {{/if}}
+
+  <input type="file" name="media" class="form-control mb-3" />
+
+  <button class="btn btn-success">Update</button>
+</form>

@@ -1,0 +1,260 @@
+/* ================= GLOBAL ================= */
+
+body {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.py-5 {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+/* ================= BUTTON ================= */
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* NAV BUTTON */
+.nav-btn {
+  background: transparent;
+  color: var(--bs-body-color);
+  padding: 6px 14px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  font-weight: 500;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.nav-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ================= CARD ================= */
+
+.card {
+  background-color: #1f2a38;
+  border-radius: 12px;
+  border: none;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+.bg-light .card {
+  background-color: #ffffff !important;
+  color: #000 !important;
+}
+
+.bg-dark .card {
+  background-color: #1e293b !important;
+}
+
+/* ================= HERO PROFILE ================= */
+
+.hero-profile {
+  padding: 40px 0;
+}
+
+.profile-img {
+  width: 280px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  max-width: 100%;
+}
+
+/* ================= SOCIAL ================= */
+
+.social-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.social-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.social-icon:hover {
+  transform: translateY(-3px);
+  background: #374151;
+}
+
+.wa-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #25D366;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.wa-button:hover {
+  background-color: #1ebe5d;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
+}
+
+/* ================= COMPACT CARD ================= */
+
+.compact-img {
+  width: 100%;
+  height: 125px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.project-desc {
+  font-size: 12px;
+  min-height: 32px;
+  color: #fff;
+}
+
+/* ===== ADMIN BUTTONS PERFECT FIX ===== */
+
+.admin-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.admin-buttons a,
+.admin-buttons form {
+  flex: 1;
+}
+
+.admin-buttons form {
+  margin: 0;
+}
+
+.admin-btn {
+  height: 32px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+/* EDIT */
+.edit-btn {
+  color: #facc15;
+  border-color: #facc15;
+}
+
+.edit-btn:hover {
+  background: #facc15;
+  color: #000;
+}
+
+/* DELETE */
+.delete-btn {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.delete-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* DELETE */
+.delete-btn {
+  background: transparent;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.delete-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* ================= GRID FIX ================= */
+
+.row {
+  margin-left: -6px;
+  margin-right: -6px;
+}
+
+.row > div {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+@media (min-width: 992px) {
+  .col-lg-1-7 {
+    width: 14.2857%;
+  }
+}
+
+/* ================= HERO SCROLL ================= */
+
+.hero-scroll-container {
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  margin-left: calc(-50vw + 50%);
+  padding: 15px 0;
+}
+
+.hero-scroll {
+  display: flex;
+  gap: 25px;
+  width: max-content;
+  animation: scrollRight 25s linear infinite;
+}
+
+.hero-scroll img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 15px;
+  transition: transform 0.3s ease;
+}
+
+.hero-scroll img:hover {
+  transform: scale(1.15);
+}
+
+@keyframes scrollRight {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

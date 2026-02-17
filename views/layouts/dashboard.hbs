@@ -1,0 +1,256 @@
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{title}}</title>
+
+    <!-- ===== BOOTSTRAP CSS ===== -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- ===== BOOTSTRAP ICONS ===== -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <!-- ===== CUSTOM CSS ===== -->
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <!-- ================= NAVBAR ================= -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm fixed-top">
+      <!-- Container navbar -->
+      <div class="container">
+
+        <!-- Brand / Logo -->
+        <a class="btn nav-btn fw-bold me-2" href="/">IFUKU</a>
+
+        <!-- Toggler (Mobile Button) -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Collapse Menu -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+
+          <!-- Navigation List -->
+          <ul class="navbar-nav ms-auto align-items-center">
+
+            <!-- My Project (Always Visible) -->
+            <li class="nav-item">
+              <a
+                class="btn nav-btn"
+                href="{{#if user}}/dashboard{{else}}/login{{/if}}"
+              >
+                My Project
+              </a>
+            </li>
+
+            <!-- Add Project (Admin Only) -->
+            {{#if (eq user.role "admin")}}
+            <li class="nav-item">
+              <a class="btn nav-btn" href="/add-project">
+                Add Project
+              </a>
+            </li>
+            {{/if}}
+
+            <!-- WhatsApp Button -->
+            <li class="nav-item ms-2">
+              <a
+                href="https://wa.me/6282171734864"
+                target="_blank"
+                class="btn btn-success btn-sm d-flex align-items-center gap-2 px-3"
+              >
+                <i class="bi bi-whatsapp"></i>
+                <span>Hubungi Saya</span>
+              </a>
+            </li>
+
+            <!-- Authentication Section -->
+            {{#if user}}
+
+            <!-- Logout -->
+            <li class="nav-item">
+              <a class="nav-link text-danger" href="/logout">
+                Logout
+              </a>
+            </li>
+
+            {{else}}
+
+            <!-- Login -->
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+
+            <!-- Register -->
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+
+            {{/if}}
+
+            <!-- Dark Mode Toggle -->
+            <li class="nav-item">
+              <button
+                type="button"
+                onclick="toggleTheme()"
+                class="btn btn-sm ms-2 px-2 py-1"
+              >
+                <i class="bi bi-moon-fill"></i>
+              </button>
+            </li>
+
+          </ul>
+          <!-- End Navigation List -->
+
+        </div>
+        <!-- End Collapse Menu -->
+
+      </div>
+      <!-- End Navbar Container -->
+    </nav>
+    <!-- ================= END NAVBAR ================= -->
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main style="margin-top: 90px">
+      <!-- Main Container -->
+      <div class="container">
+        {{{body}}}
+      </div>
+      <!-- End Main Container -->
+    </main>
+    <!-- ================= END CONTENT ================= -->
+
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-body-tertiary text-center py-4 mt-5">
+      <p class="mb-0">© 2026 Mhd Nur Ifaturachman</p>
+    </footer>
+    <!-- ================= END FOOTER ================= -->
+
+
+
+    <!-- ================= SCRIPTS ================= -->
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      // ====== SweetAlert Delete Confirmation ======
+      function confirmDelete(event, form) {
+        event.preventDefault();
+
+        Swal.fire({
+          title: "Hero ini nggak meta, yakin ban?",
+          text: "Hero akan di ban permanen!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Iya lah!",
+          cancelButtonText: "Ga jadi deh",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.submit();
+          }
+        });
+      }
+
+      // ====== Dark Mode System ======
+      const html = document.documentElement;
+
+      function setTheme(theme) {
+        html.setAttribute("data-bs-theme", theme);
+        localStorage.setItem("theme", theme);
+      }
+
+      function toggleTheme() {
+        const current = html.getAttribute("data-bs-theme");
+        setTheme(current === "dark" ? "light" : "dark");
+      }
+
+      const savedTheme = localStorage.getItem("theme") || "dark";
+      setTheme(savedTheme);
+
+      // ====== Search & Filter (Dashboard AJAX) ======
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("searchForm");
+        const searchInput = document.querySelector("input[name='search']");
+        const roleSelect = document.querySelector("select[name='role']");
+        const container = document.getElementById("projectContainer");
+
+        if (!form) return;
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const search = searchInput.value;
+          const role = roleSelect.value;
+
+          try {
+            const response = await fetch(
+              `/api/projects?search=${search}&role=${role}`
+            );
+            const projects = await response.json();
+
+            container.innerHTML = "";
+
+            if (projects.length === 0) {
+              container.innerHTML =
+                "<p class='text-center'>Hero tidak ditemukan</p>";
+            } else {
+              projects.forEach((project) => {
+                container.innerHTML += `
+                  <div class="col-lg-1-7 col-md-3 col-6">
+                    <div class="card compact-card p-2">
+                      ${project.media ? `<img src="${project.media}" class="compact-img">` : ""}
+                      <div class="text-center mt-2">
+                        <small class="fw-bold text-info d-block">
+                          <a href="/projects/${project.id}" 
+                             class="text-decoration-none text-info">
+                            ${project.name}
+                          </a>
+                        </small>
+                        <small class="d-block project-desc">
+                          ${project.description.substring(0, 35)}...
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              });
+            }
+
+            setTimeout(() => {
+              container.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }, 100);
+
+          } catch (err) {
+            console.error("Search error:", err);
+          }
+        });
+      });
+    </script>
+
+  </body>
+</html>

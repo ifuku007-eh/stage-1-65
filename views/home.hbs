@@ -1,0 +1,18 @@
+{{!< dashboard}}
+
+<h1 class="mb-4">Welcome to My Web ! Please Login to see My Project</h1>
+
+<div class="row">
+  {{#each projects}}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <img src="{{this.image}}" class="card-img-top" />
+      <div class="card-body">
+        <h5>{{this.title}}</h5>
+        <p>{{this.description}}</p>
+        <a href="/project/{{this.id}}" class="btn btn-primary btn-sm">Detail</a>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>

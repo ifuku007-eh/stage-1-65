@@ -1,0 +1,106 @@
+{{!< dashboard}}
+
+<!-- ===== PAGE TITLE ===== -->
+<h2>Add Project</h2>
+
+<!-- ===== FORM ADD PROJECT ===== -->
+<form action="/projects" method="POST" enctype="multipart/form-data">
+  <!-- Form untuk menambahkan hero/project baru -->
+  <!-- enctype multipart diperlukan untuk upload file -->
+
+  <!-- Input Nama Project -->
+  <input
+    class="form-control mb-3"
+    name="name"
+    placeholder="Project Name"
+    required
+  />
+
+  <!-- Label Upload Gambar -->
+  <label class="fw-bold">Hero Image</label>
+
+  <!-- Input Upload Gambar -->
+  <input 
+    type="file" 
+    name="media" 
+    class="form-control mb-3" 
+  />
+
+  <!-- Input Deskripsi -->
+  <textarea
+    class="form-control mb-3"
+    name="description"
+    placeholder="Description"
+  ></textarea>
+
+  <!-- ===== GENDER SECTION ===== -->
+  <label class="fw-bold">Gender</label>
+
+  <div class="mb-3"> <!-- Container radio button gender -->
+
+    <!-- Radio Male -->
+    <div class="form-check"> <!-- Wrapper radio option -->
+      <input
+        class="form-check-input"
+        type="radio"
+        name="gender"
+        value="Male"
+        required
+      />
+      <label class="form-check-label">Male</label>
+    </div>
+
+    <!-- Radio Female -->
+    <div class="form-check"> <!-- Wrapper radio option -->
+      <input
+        class="form-check-input"
+        type="radio"
+        name="gender"
+        value="Female"
+      />
+      <label class="form-check-label">Female</label>
+    </div>
+
+    <!-- Radio Undefined -->
+    <div class="form-check"> <!-- Wrapper radio option -->
+      <input
+        class="form-check-input"
+        type="radio"
+        name="gender"
+        value="Undefined"
+      />
+      <label class="form-check-label">Undefined</label>
+    </div>
+
+  </div>
+  <!-- End Gender Section -->
+
+  <!-- ===== HERO ROLE SECTION ===== -->
+  <label class="fw-bold">Hero Role</label>
+
+  <div class="mb-3"> <!-- Container checkbox roles -->
+
+    {{#each heroRoles}}
+    <div class="form-check"> <!-- Wrapper checkbox role -->
+      <input
+        class="form-check-input"
+        type="checkbox"
+        name="roles"
+        value="{{this}}"
+      />
+      <label class="form-check-label">
+        {{this}}
+      </label>
+    </div>
+    {{/each}}
+
+  </div>
+  <!-- End Role Section -->
+
+  <!-- Tombol Submit -->
+  <button class="btn btn-primary">
+    Create
+  </button>
+
+</form>
+<!-- End Form Add Project -->

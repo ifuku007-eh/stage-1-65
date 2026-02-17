@@ -1,0 +1,217 @@
+{{!< dashboard}}
+
+<!-- ===== WELCOME SECTION ===== -->
+<div class="text-center"> <!-- Container welcome text -->
+  <h1>Welcome, {{user.name}} 👋</h1>
+</div>
+
+<!-- ===== HERO PROFILE SECTION ===== -->
+<section class="hero-profile container my-5">
+
+  <div class="row align-items-center"> <!-- Row untuk foto dan deskripsi -->
+
+    <!-- ===== FOTO PROFILE ===== -->
+    <div class="col-md-4 text-center mb-4"> <!-- Kolom foto profile -->
+
+      <img src="/images/iif.jpg" class="profile-img">
+
+      {{#if (eq user.role "admin")}}
+      <div class="mt-3"> <!-- Container tombol Add Project (admin only) -->
+        <a href="/add-project" 
+           class="btn btn-primary w-75 fw-semibold shadow-sm">
+          <i class="bi bi-plus-lg me-2"></i>
+          Add Projects
+        </a>
+      </div>
+      {{/if}}
+
+    </div>
+
+    <!-- ===== DESKRIPSI PROFILE ===== -->
+    <div class="col-md-8"> <!-- Kolom teks deskripsi -->
+
+      <h1 class="fw-bold mb-3">Hi, I'm Ifuku.</h1>
+      <h4 class="text-muted mb-3">MLBB Hero Analyst & Game Enthusiast</h4>
+
+      <p class="lead">
+  Di project ini, saya berbagi opini dan analisis santai seputar hero-hero di 
+  Mobile Legends: Bang Bang. Setiap hero punya ciri khasnya masing-masing — 
+  dari gaya bermain, kekuatan di early sampai late game, sampai peran pentingnya 
+  saat team fight. Saya suka membedah bagaimana sebuah hero bekerja di dalam match 
+  dan apa yang membuatnya efektif (atau justru underrated).
+      </p>
+
+      <p class="lead">
+  Lewat portofolio ini, saya membahas kekuatan dan kelemahan hero, sedikit gambaran 
+  gameplay, combo skill yang menarik, serta info-info unik yang mungkin jarang 
+  diperhatikan pemain. Tujuannya simpel: membantu pemain lebih paham hero yang 
+  mereka pakai, sekaligus menikmati permainan dengan strategi yang lebih matang 
+  dan percaya diri.
+      </p>
+
+      <h6 class="mt-5 mb-3">Berikut media sosial saya, jangan lupa follow!</h6>
+
+      <!-- ===== SOCIAL MEDIA WRAPPER ===== -->
+      <div class="social-wrapper"> <!-- Container icon social media -->
+
+        <a href="https://facebook.com/iifyoman"
+           target="_blank"
+           class="social-icon">
+          <i class="bi bi-facebook"></i>
+        </a>
+
+        <a href="https://instagram.com/iifyoman007/"
+           target="_blank"
+           class="social-icon">
+          <i class="bi bi-instagram"></i>
+        </a>
+
+        <a href="https://wa.me/6282171734864"
+           target="_blank"
+           class="wa-button">
+          <i class="bi bi-whatsapp"></i>
+          <span>Hubungi Saya</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<h3 class="mb-4">MLBB Hero Dashboard</h3>
+
+<!-- ===== HERO SCROLL ANIMATION ===== -->
+<div class="hero-scroll-container"> <!-- Container utama animasi scroll -->
+  <div class="hero-scroll"> <!-- Wrapper isi gambar hero -->
+
+    <img src="/images/heroes/layla.png">
+    <img src="/images/heroes/eudora.png">
+    <img src="/images/heroes/alucard.png">
+    <img src="/images/heroes/franco.png">
+    <img src="/images/heroes/angela.png">
+    <img src="/images/heroes/fanny.png">
+    <img src="/images/heroes/chou.png">
+    <img src="/images/heroes/clint.png">
+    <img src="/images/heroes/bane.png">
+    <img src="/images/heroes/akai.png">
+    <img src="/images/heroes/alice.png">
+    <img src="/images/heroes/nana.png">
+    <img src="/images/heroes/balmond.png">
+    <img src="/images/heroes/freya.png">
+    <img src="/images/heroes/cyclops.png">
+    <img src="/images/heroes/zilong.png">
+    <img src="/images/heroes/bruno.png">
+
+    <!-- Duplicate images untuk efek infinite scroll -->
+    <img src="/images/heroes/layla.png">
+    <img src="/images/heroes/eudora.png">
+    <img src="/images/heroes/alucard.png">
+    <img src="/images/heroes/franco.png">
+    <img src="/images/heroes/angela.png">
+    <img src="/images/heroes/fanny.png">
+    <img src="/images/heroes/chou.png">
+    <img src="/images/heroes/clint.png">
+    <img src="/images/heroes/bane.png">
+    <img src="/images/heroes/akai.png">
+    <img src="/images/heroes/alice.png">
+    <img src="/images/heroes/nana.png">
+    <img src="/images/heroes/balmond.png">
+    <img src="/images/heroes/freya.png">
+    <img src="/images/heroes/cyclops.png">
+    <img src="/images/heroes/zilong.png">
+    <img src="/images/heroes/bruno.png">
+
+  </div>
+</div>
+
+<!-- ===== SEARCH & FILTER FORM ===== -->
+<form id="searchForm" class="mb-4"> <!-- Form pencarian dan filter hero -->
+
+  <div class="row g-2 align-items-center"> <!-- Row input dan dropdown -->
+
+    <div class="col-md-4"> <!-- Kolom input search -->
+      <input 
+        type="text" 
+        name="search" 
+        placeholder="Search hero..."
+        class="form-control">
+    </div>
+
+    <div class="col-md-3"> <!-- Kolom filter berdasarkan role -->
+      <select name="role" class="form-select">
+        <option value="">All Role</option>
+        {{#each heroRoles}}
+          <option value="{{this}}" 
+            {{#if (eq ../selectedRole this)}}selected{{/if}}>
+            {{this}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="col-md-2"> <!-- Kolom tombol submit filter -->
+      <button type="submit" class="btn btn-primary w-100">
+        Filter
+      </button>
+    </div>
+
+  </div>
+
+</form>
+
+<!-- ===== HERO CARD CONTAINER ===== -->
+<div class="row g-3" id="projectContainer"> <!-- Container daftar hero -->
+
+  {{#each projects}}
+  <div class="col-lg-1-7 col-md-3 col-6"> <!-- Kolom masing-masing hero -->
+
+    <div class="card compact-card p-2"> <!-- Card hero -->
+
+      {{#if this.media}}
+        <img src="{{this.media}}" class="compact-img">
+      {{/if}}
+
+      <div class="text-center mt-2"> <!-- Container nama dan deskripsi -->
+
+        <small class="fw-bold text-info d-block">
+          <a href="/projects/{{this.id}}" 
+             class="text-decoration-none text-info">
+            {{this.name}}
+          </a>
+        </small>
+
+        <small class="d-block project-desc">
+          {{truncate this.description 35}}
+        </small>
+
+      </div>
+
+      {{#if (eq ../user.role "admin")}}
+      <div class="admin-buttons mt-2"> <!-- Container tombol Edit & Delete (admin only) -->
+
+        <a href="/projects/{{this.id}}/edit"
+           class="admin-btn edit-btn">
+           Edit
+        </a>
+
+        <form action="/projects/{{this.id}}?_method=DELETE"
+              method="POST"
+              onsubmit="confirmDelete(event, this)"> <!-- Form delete hero -->
+          <button type="submit"
+                  class="admin-btn delete-btn">
+            Delete
+          </button>
+        </form>
+
+      </div>
+      {{/if}}
+
+    </div>
+
+  </div>
+  {{/each}}
+
+</div>
