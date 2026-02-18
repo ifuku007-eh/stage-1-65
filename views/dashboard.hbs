@@ -81,7 +81,9 @@
 
 </section>
 
-<h3 class="mb-4">MLBB Hero Dashboard</h3>
+<h3 id="heroDashboard" class="mb-4 scroll-target">
+  MLBB Hero Dashboard
+</h3>
 
 <!-- ===== HERO SCROLL ANIMATION ===== -->
 <div class="hero-scroll-container"> <!-- Container utama animasi scroll -->
@@ -141,15 +143,15 @@
     </div>
 
     <div class="col-md-3"> <!-- Kolom filter berdasarkan role -->
-      <select name="role" class="form-select">
-        <option value="">All Role</option>
-        {{#each heroRoles}}
-          <option value="{{this}}" 
-            {{#if (eq ../selectedRole this)}}selected{{/if}}>
-            {{this}}
-          </option>
-        {{/each}}
-      </select>
+<select name="role" class="form-select">
+  <option value="">All Role</option>
+  {{#each heroRoles}}
+    <option value="{{this}}"
+      {{#if (eq ../selectedRole this)}}selected{{/if}}>
+      {{this}}
+    </option>
+  {{/each}}
+</select>
     </div>
 
     <div class="col-md-2"> <!-- Kolom tombol submit filter -->

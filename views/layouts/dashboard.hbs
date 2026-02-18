@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{title}}</title>
+    <title>Ifuku MLBB Dashboard</title>
 
     <!-- ===== BOOTSTRAP CSS ===== -->
     <link
@@ -25,7 +25,6 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm fixed-top">
       <!-- Container navbar -->
       <div class="container">
-
         <!-- Brand / Logo -->
         <a class="btn nav-btn fw-bold me-2" href="/">IFUKU</a>
 
@@ -41,15 +40,13 @@
 
         <!-- Collapse Menu -->
         <div class="collapse navbar-collapse" id="navbarContent">
-
           <!-- Navigation List -->
           <ul class="navbar-nav ms-auto align-items-center">
-
             <!-- My Project (Always Visible) -->
             <li class="nav-item">
               <a
                 class="btn nav-btn"
-                href="{{#if user}}/dashboard{{else}}/login{{/if}}"
+                href="{{#if user}}#heroDashboard{{else}}/login{{/if}}"
               >
                 My Project
               </a>
@@ -58,9 +55,7 @@
             <!-- Add Project (Admin Only) -->
             {{#if (eq user.role "admin")}}
             <li class="nav-item">
-              <a class="btn nav-btn" href="/add-project">
-                Add Project
-              </a>
+              <a class="btn nav-btn" href="/add-project"> Add Project </a>
             </li>
             {{/if}}
 
@@ -81,9 +76,7 @@
 
             <!-- Logout -->
             <li class="nav-item">
-              <a class="nav-link text-danger" href="/logout">
-                Logout
-              </a>
+              <a class="nav-link text-danger" href="/logout"> Logout </a>
             </li>
 
             {{else}}
@@ -110,39 +103,28 @@
                 <i class="bi bi-moon-fill"></i>
               </button>
             </li>
-
           </ul>
           <!-- End Navigation List -->
-
         </div>
         <!-- End Collapse Menu -->
-
       </div>
       <!-- End Navbar Container -->
     </nav>
     <!-- ================= END NAVBAR ================= -->
 
-
-
-    <!-- ================= MAIN CONTENT ================= -->
     <main style="margin-top: 90px">
-      <!-- Main Container -->
       <div class="container">
-        {{{body}}}
+        <!-- ================= DASHBOARD SECTION ================= -->
+        <section id="dashboard">{{{body}}}</section>
       </div>
-      <!-- End Main Container -->
     </main>
     <!-- ================= END CONTENT ================= -->
-
-
 
     <!-- ================= FOOTER ================= -->
     <footer class="bg-body-tertiary text-center py-4 mt-5">
       <p class="mb-0">© 2026 Mhd Nur Ifaturachman</p>
     </footer>
     <!-- ================= END FOOTER ================= -->
-
-
 
     <!-- ================= SCRIPTS ================= -->
 
@@ -189,68 +171,95 @@
       const savedTheme = localStorage.getItem("theme") || "dark";
       setTheme(savedTheme);
 
-      // ====== Search & Filter (Dashboard AJAX) ======
+      // ====== DOM READY ======
       document.addEventListener("DOMContentLoaded", function () {
+        /* ================= SEARCH & FILTER AJAX ================= */
         const form = document.getElementById("searchForm");
         const searchInput = document.querySelector("input[name='search']");
         const roleSelect = document.querySelector("select[name='role']");
         const container = document.getElementById("projectContainer");
 
-        if (!form) return;
+        if (form) {
+          form.addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-        form.addEventListener("submit", async function (e) {
-          e.preventDefault();
+            const search = searchInput.value;
+            const role = roleSelect.value;
 
-          const search = searchInput.value;
-          const role = roleSelect.value;
+            try {
+              const response = await fetch(
+                `/api/projects?search=${search}&role=${role}`,
+              );
 
-          try {
-            const response = await fetch(
-              `/api/projects?search=${search}&role=${role}`
-            );
-            const projects = await response.json();
+              const projects = await response.json();
+              container.innerHTML = "";
 
-            container.innerHTML = "";
-
-            if (projects.length === 0) {
-              container.innerHTML =
-                "<p class='text-center'>Hero tidak ditemukan</p>";
-            } else {
-              projects.forEach((project) => {
-                container.innerHTML += `
-                  <div class="col-lg-1-7 col-md-3 col-6">
-                    <div class="card compact-card p-2">
-                      ${project.media ? `<img src="${project.media}" class="compact-img">` : ""}
-                      <div class="text-center mt-2">
-                        <small class="fw-bold text-info d-block">
-                          <a href="/projects/${project.id}" 
-                             class="text-decoration-none text-info">
-                            ${project.name}
-                          </a>
-                        </small>
-                        <small class="d-block project-desc">
-                          ${project.description.substring(0, 35)}...
-                        </small>
-                      </div>
+              if (projects.length === 0) {
+                container.innerHTML =
+                  "<p class='text-center'>Hero tidak ditemukan</p>";
+              } else {
+                projects.forEach((project) => {
+                  container.innerHTML += `
+                <div class="col-lg-1-7 col-md-3 col-6">
+                  <div class="card compact-card p-2">
+                    ${project.media ? `<img src="${project.media}" class="compact-img">` : ""}
+                    <div class="text-center mt-2">
+                      <small class="fw-bold text-info d-block">
+                        <a href="/projects/${project.id}" 
+                           class="text-decoration-none text-info">
+                          ${project.name}
+                        </a>
+                      </small>
+                      <small class="d-block project-desc">
+                        ${project.description.substring(0, 35)}...
+                      </small>
                     </div>
                   </div>
-                `;
+                </div>
+              `;
+                });
+              }
+
+              // Auto scroll ke hasil
+              setTimeout(() => {
+                container.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+              }, 100);
+            } catch (err) {
+              console.error("Search error:", err);
+            }
+          });
+        }
+
+        /* ================= SMOOTH SCROLL NAVBAR ================= */
+        const navbar = document.querySelector(".navbar");
+        const navbarHeight = navbar ? navbar.offsetHeight : 0;
+
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            const targetId = this.getAttribute("href");
+
+            if (targetId.length > 1) {
+              e.preventDefault();
+
+              const target = document.querySelector(targetId);
+              if (!target) return;
+
+              const elementPosition =
+                target.getBoundingClientRect().top + window.pageYOffset;
+
+              const offsetPosition = elementPosition - navbarHeight - 10;
+
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth",
               });
             }
-
-            setTimeout(() => {
-              container.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }, 100);
-
-          } catch (err) {
-            console.error("Search error:", err);
-          }
+          });
         });
       });
     </script>
-
   </body>
 </html>

@@ -1,4 +1,4 @@
-// ================= IMPORT MODULE =================
+require("dotenv").config(); // Load environment variables
 const express = require("express"); // Framework utama
 const path = require("path"); // Mengatur path folder
 const { Pool } = require("pg"); // PostgreSQL client
@@ -12,12 +12,26 @@ const app = express();
 const PORT = process.env.PORT || 3000; // Port server
 
 // ================= DATABASE CONNECTION =================
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+let pool;
+
+if (process.env.NODE_ENV === "production") {
+  // Railway
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
+} else {
+  // Lokal
+  pool = new Pool({
+    user: "postgres",
+    host: "localhost",
+    database: "portfolio_web",
+    password: "thakr4wqe",
+    port: 5432,
+    ssl: false,
+  });
+}
+
 
 // ================= APP CONFIGURATION =================
 app.set("view engine", "hbs"); // Set template engine
@@ -146,13 +160,13 @@ app.get("/dashboard", isAuth, async (req, res) => {
   let query = "SELECT * FROM projects WHERE 1=1";
   const values = [];
 
-  // Filter berdasarkan search nama
+  // Filter search nama
   if (search) {
     values.push(`%${search}%`);
     query += ` AND LOWER(name) LIKE LOWER($${values.length})`;
   }
 
-  // Filter berdasarkan role (array PostgreSQL)
+  // Filter berdasarkan role (ARRAY PostgreSQL)
   if (role) {
     values.push(role);
     query += ` AND roles @> ARRAY[$${values.length}]`;
@@ -160,18 +174,19 @@ app.get("/dashboard", isAuth, async (req, res) => {
 
   const result = await pool.query(query, values);
 
-  const selectedRole = role || null;
+  // 🔥 Ambil semua role unik dari array roles
+  const roleResult = await pool.query(`
+    SELECT DISTINCT unnest(roles) AS role
+    FROM projects
+    ORDER BY role ASC
+  `);
 
-  // Tandai role yang dipilih
-  const heroRolesWithState = heroRoles.map((r) => ({
-    name: r,
-    isSelected: r === selectedRole,
-  }));
+  const heroRoles = roleResult.rows.map(r => r.role);
 
   res.render("dashboard", {
     projects: result.rows,
-    heroRoles: heroRolesWithState,
-    selectedRole,
+    heroRoles,
+    selectedRole: role || null,
     search,
   });
 });
