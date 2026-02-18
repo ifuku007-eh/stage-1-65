@@ -44,14 +44,12 @@
           <ul class="navbar-nav ms-auto align-items-center">
             <!-- My Project (Always Visible) -->
             <li class="nav-item">
-              <a
-                class="btn nav-btn"
-                href="{{#if user}}#heroDashboard{{else}}/login{{/if}}"
-              >
-                My Project
-              </a>
+              {{#if user}}
+              <a class="btn nav-btn" href="/dashboard">My Project</a>
+              {{else}}
+              <a class="btn nav-btn" href="/login">My Project</a>
+              {{/if}}
             </li>
-
             <!-- Add Project (Admin Only) -->
             {{#if (eq user.role "admin")}}
             <li class="nav-item">
@@ -231,6 +229,21 @@
               console.error("Search error:", err);
             }
           });
+        }
+        /* ================= AUTO SCROLL AFTER RELOAD ================= */
+        const params = new URLSearchParams(window.location.search);
+        const justLogin = params.get("justLogin");
+
+        if (!justLogin && window.location.pathname === "/dashboard") {
+          const target = document.getElementById("heroDashboard");
+          if (target) {
+            setTimeout(() => {
+              target.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }, 200);
+          }
         }
 
         /* ================= SMOOTH SCROLL NAVBAR ================= */

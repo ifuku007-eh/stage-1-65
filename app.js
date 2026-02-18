@@ -137,7 +137,7 @@ app.post("/login", async (req, res) => {
     role: user.role,
   };
 
-  res.redirect("/dashboard");
+res.redirect("/dashboard?justLogin=true");
 });
 
 // ===== LOGOUT =====
